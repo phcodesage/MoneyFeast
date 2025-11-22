@@ -1,6 +1,7 @@
 import { Briefcase, Rocket, TrendingUp, BarChart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase, Category } from '../lib/supabase';
+import { CategoryCardSkeleton } from './LoadingSkeleton';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   briefcase: Briefcase,
@@ -34,7 +35,21 @@ export default function Categories() {
   }
 
   if (loading) {
-    return null;
+    return (
+      <section className="py-16 bg-gradient-to-br from-green-50 via-amber-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Explore by Category</h2>
+            <p className="text-lg text-gray-600">Find the perfect path to boost your income</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <CategoryCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (

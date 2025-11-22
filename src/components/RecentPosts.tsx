@@ -1,6 +1,8 @@
 import { Clock, ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase, Post } from '../lib/supabase';
+import { PostCardSkeleton } from './LoadingSkeleton';
 
 export default function RecentPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -33,7 +35,21 @@ export default function RecentPosts() {
   }
 
   if (loading) {
-    return null;
+    return (
+      <section id="blog" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Guides</h2>
+            <p className="text-lg text-gray-600">Fresh insights and strategies updated regularly</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <PostCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -71,13 +87,13 @@ export default function RecentPosts() {
 
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500">{post.author}</span>
-                  <a
-                    href={`#post/${post.slug}`}
+                  <Link
+                    to={`/post/${post.slug}`}
                     className="inline-flex items-center text-green-600 font-semibold text-sm hover:text-green-700 transition-colors"
                   >
                     Read
                     <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>

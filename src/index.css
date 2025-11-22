@@ -3,12 +3,39 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 18px; /* Increased from default 16px */
+  }
+
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(to bottom right, #fef3c7, #ffffff, #dcfce7);
     background-attachment: fixed;
+    line-height: 1.7; /* Improved line height for readability */
+    letter-spacing: 0.01em; /* Slight letter spacing for better readability */
+  }
+
+  /* Improve readability for paragraphs and text content */
+  p {
+    line-height: 1.8;
+    margin-bottom: 1em;
+  }
+
+  /* Better heading sizes */
+  h1 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  h3, h4, h5, h6 {
+    line-height: 1.4;
   }
 
   body::before {

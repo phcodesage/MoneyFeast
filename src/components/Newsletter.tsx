@@ -1,6 +1,7 @@
 import { Mail, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { analytics } from '../lib/analytics';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -27,6 +28,7 @@ export default function Newsletter() {
       } else {
         setStatus('success');
         setMessage('Successfully subscribed! Check your inbox for updates.');
+        analytics.newsletterSubscribe(email);
         setEmail('');
       }
     } catch (error) {
