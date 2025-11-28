@@ -14,7 +14,7 @@ export default function FeaturedPosts() {
 
   async function fetchFeaturedPosts() {
     try {
-      const { data, error } = await supabase
+      const { data: postsData, error: postsError } = await supabase
         .from('posts')
         .select(`
           *,
@@ -25,8 +25,29 @@ export default function FeaturedPosts() {
         .order('created_at', { ascending: false })
         .limit(3);
 
-      if (error) throw error;
-      setPosts(data || []);
+      if (postsError) throw postsError;
+
+      // Fetch profiles for authors
+      if (postsData) {
+        const authorIds = [...new Set(postsData.map(p => p.author_id).filter(Boolean))];
+        if (authorIds.length > 0) {
+          const { data: profilesData } = await supabase
+            .from('profiles')
+            .select('id, avatar_url')
+            .in('id', authorIds);
+
+          if (profilesData) {
+            const profileMap = Object.fromEntries(profilesData.map(p => [p.id, p.avatar_url]));
+            const postsWithAvatars = postsData.map(post => ({
+              ...post,
+              author_avatar: post.author_id && profileMap[post.author_id] ? profileMap[post.author_id] : post.author_avatar
+            }));
+            setPosts(postsWithAvatars);
+            return;
+          }
+        }
+        setPosts(postsData);
+      }
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -64,21 +85,37 @@ export default function FeaturedPosts() {
           {posts.map((post) => (
             <article
               key={post.id}
-              className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group hover:-translate-y-2 border border-slate-100"
+              className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group hover:-translate-y-2 border border-slate-100 flex flex-col h-full"
             >
-              {/* Gradient Border Effect */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-semibold tracking-wide uppercase border border-emerald-100">
+              {post.image_url && (
+                <Link to={`/post/${post.slug}`} className="block overflow-hidden h-56 relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity" />
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <span className="absolute bottom-4 left-4 z-20 px-3 py-1 bg-white/90 backdrop-blur-sm text-emerald-800 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm">
                     {post.category?.name}
                   </span>
-                  <div className="flex items-center text-slate-400 text-sm">
-                    <Clock className="h-4 w-4 mr-1.5" />
-                    <span>{post.read_time} min read</span>
+                </Link>
+              )}
+
+              {/* Gradient Border Effect */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 z-30"></div>
+
+              <div className="p-8 flex-1 flex flex-col">
+                {!post.image_url && (
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-semibold tracking-wide uppercase border border-emerald-100">
+                      {post.category?.name}
+                    </span>
+                    <div className="flex items-center text-slate-400 text-sm">
+                      <Clock className="h-4 w-4 mr-1.5" />
+                      <span>{post.read_time} min read</span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <h3 className="text-2xl font-display font-bold text-slate-900 mb-4 leading-tight group-hover:text-emerald-600 transition-colors">
                   {post.title}
@@ -88,9 +125,17 @@ export default function FeaturedPosts() {
                   {post.excerpt}
                 </p>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50">
                   <span className="flex items-center text-sm font-medium text-slate-500">
-                    <Star className="h-4 w-4 text-gold-400 mr-2 fill-gold-400" />
+                    {post.author_avatar ? (
+                      <img
+                        src={post.author_avatar}
+                        alt={post.author}
+                        className="h-8 w-8 rounded-full object-cover mr-2.5 border border-slate-100"
+                      />
+                    ) : (
+                      <Star className="h-4 w-4 text-gold-400 mr-2 fill-gold-400" />
+                    )}
                     {post.author}
                   </span>
                   <Link

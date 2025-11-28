@@ -64,12 +64,12 @@ export default function Search() {
 
       if (error) throw error;
       setResults(data || []);
-      
+
       // Track search
       if (page === 1) {
         analytics.search(searchQuery, data?.length || 0);
       }
-      
+
       // Scroll to top on page change
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -97,7 +97,7 @@ export default function Search() {
 
   return (
     <>
-      <SEO 
+      <SEO
         title={query ? `Search Results for "${query}"` : 'Search Articles'}
         description="Search through our collection of guides and articles on earning money online."
       />
@@ -202,7 +202,7 @@ export default function Search() {
                   </article>
                 ))}
               </div>
-              
+
               <Pagination
                 currentPage={currentPage}
                 totalPages={Math.ceil(totalCount / POSTS_PER_PAGE)}

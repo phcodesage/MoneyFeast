@@ -30,10 +30,13 @@ export interface Post {
   excerpt: string;
   content: string;
   author: string;
+  author_avatar?: string;
+  author_id?: string;
   category_id: string;
   featured: boolean;
   published: boolean;
-  read_time: number;
+  image_url?: string;
+  read_time?: number;
   created_at: string;
   updated_at: string;
   category?: Category;

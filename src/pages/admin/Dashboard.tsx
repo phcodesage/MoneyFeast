@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, Eye, EyeOff, LogOut, FileText } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, EyeOff, LogOut, FileText, Database } from 'lucide-react';
 import { supabase, Post } from '../../lib/supabase';
+import { seedDatabase } from '../../lib/seed';
 import { useAuth } from '../../contexts/AuthContext';
 import SEO from '../../components/SEO';
 
@@ -70,6 +71,21 @@ export default function Dashboard() {
     }
   }
 
+  async function handleSeed() {
+    if (!confirm('This will add sample categories and posts. Continue?')) return;
+
+    setLoading(true);
+    const result = await seedDatabase(user?.id);
+    setLoading(false);
+
+    if (result.success) {
+      alert(result.message);
+      fetchPosts();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  }
+
   async function handleSignOut() {
     await signOut();
     navigate('/admin/login');
@@ -107,6 +123,14 @@ export default function Dashboard() {
                 >
                   View Site
                 </Link>
+                <button
+                  onClick={handleSeed}
+                  className="text-slate-600 hover:text-emerald-600 transition-colors font-medium text-sm flex items-center gap-2"
+                  title="Add sample content"
+                >
+                  <Database className="h-4 w-4" />
+                  Seed Content
+                </button>
                 <button
                   onClick={handleSignOut}
                   className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium"
@@ -217,8 +241,8 @@ export default function Dashboard() {
                         <button
                           onClick={() => togglePublished(post)}
                           className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${post.published
-                              ? 'bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100'
-                              : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200'
                             }`}
                         >
                           {post.published ? (

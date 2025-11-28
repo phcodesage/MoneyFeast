@@ -1,5 +1,6 @@
 import { Briefcase, Rocket, TrendingUp, BarChart } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase, Category } from '../lib/supabase';
 import { CategoryCardSkeleton } from './LoadingSkeleton';
 
@@ -64,9 +65,9 @@ export default function Categories() {
           {categories.map((category) => {
             const IconComponent = iconMap[category.icon] || Briefcase;
             return (
-              <a
+              <Link
                 key={category.id}
-                href={`#category/${category.slug}`}
+                to={`/category/${category.slug}`}
                 className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 group"
               >
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4 group-hover:bg-green-600 transition-colors">
@@ -78,7 +79,7 @@ export default function Categories() {
                 <p className="text-gray-600 leading-relaxed">
                   {category.description}
                 </p>
-              </a>
+              </Link>
             );
           })}
         </div>

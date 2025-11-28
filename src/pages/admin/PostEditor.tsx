@@ -19,6 +19,7 @@ export default function PostEditor() {
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [featured, setFeatured] = useState(false);
   const [published, setPublished] = useState(false);
@@ -71,6 +72,7 @@ export default function PostEditor() {
         setExcerpt(data.excerpt || '');
         setContent(data.content || '');
         setAuthor(data.author || '');
+        setImageUrl(data.image_url || '');
         setCategoryId(data.category_id || '');
         setFeatured(data.featured || false);
         setPublished(data.published || false);
@@ -105,6 +107,7 @@ export default function PostEditor() {
         excerpt,
         content,
         author: author || 'Admin',
+        image_url: imageUrl,
         category_id: categoryId,
         featured,
         published,
@@ -228,6 +231,24 @@ export default function PostEditor() {
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Featured Image URL
+                    </label>
+                    <input
+                      type="text"
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                      placeholder="https://example.com/image.jpg"
+                    />
+                    {imageUrl && (
+                      <div className="mt-3 rounded-lg overflow-hidden border border-slate-200">
+                        <img src={imageUrl} alt="Preview" className="w-full h-48 object-cover" />
+                      </div>
+                    )}
+                  </div>
+
                   <div className="prose-editor">
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Content (Markdown)
@@ -278,6 +299,8 @@ export default function PostEditor() {
                       placeholder="Author name"
                     />
                   </div>
+
+
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">

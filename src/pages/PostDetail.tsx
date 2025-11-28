@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Clock, User, Calendar, ArrowLeft } from 'lucide-react';
 import { supabase, Post } from '../lib/supabase';
 import SocialShare from '../components/SocialShare';
@@ -9,7 +9,6 @@ import { analytics } from '../lib/analytics';
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +20,8 @@ export default function PostDetail() {
 
   async function fetchPost(postSlug: string) {
     try {
-      const { data, error } = await supabase
+      // Fetch post
+      const { data: postData, error: postError } = await supabase
         .from('posts')
         .select(`
           *,
@@ -29,14 +29,29 @@ export default function PostDetail() {
         `)
         .eq('slug', postSlug)
         .eq('published', true)
-        .maybeSingle();
+        .single();
 
-      if (error) throw error;
-      setPost(data);
-      
+      if (postError) throw postError;
+
+      // If post has an author_id, fetch their profile
+      let finalPost = postData;
+      if (postData && postData.author_id) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', postData.author_id)
+          .single();
+
+        if (profileData?.avatar_url) {
+          finalPost = { ...postData, author_avatar: profileData.avatar_url };
+        }
+      }
+
+      setPost(finalPost);
+
       // Track post read
-      if (data) {
-        analytics.postRead(data.slug, data.title);
+      if (finalPost) {
+        analytics.postRead(finalPost.slug, finalPost.title);
       }
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -87,15 +102,15 @@ export default function PostDetail() {
         url={fullUrl}
         keywords={[post.category?.name || '', 'online earning', 'money making']}
       />
-      <article className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-green-50 py-8">
+      <article className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-green-50 pt-24 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <button
-            onClick={() => navigate(-1)}
+          <Link
+            to="/"
             className="inline-flex items-center text-gray-600 hover:text-green-600 font-medium mb-8 transition-colors"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
-            Back
-          </button>
+            Back to Home
+          </Link>
 
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8 md:p-12">
@@ -111,8 +126,18 @@ export default function PostDetail() {
 
               <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-8 pb-8 border-b border-gray-200">
                 <div className="flex items-center">
-                  <User className="h-5 w-5 mr-2" />
-                  <span>{post.author}</span>
+                  {post.author_avatar ? (
+                    <img
+                      src={post.author_avatar}
+                      alt={post.author}
+                      className="h-10 w-10 rounded-full object-cover mr-3 border-2 border-white shadow-sm"
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center mr-3 text-emerald-600">
+                      <User className="h-5 w-5" />
+                    </div>
+                  )}
+                  <span className="font-medium text-gray-900">{post.author}</span>
                 </div>
                 <div className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
@@ -127,6 +152,16 @@ export default function PostDetail() {
                   <span>{post.read_time} min read</span>
                 </div>
               </div>
+
+              {post.image_url && (
+                <div className="mb-10 rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              )}
 
               <div className="prose prose-lg max-w-none mb-8">
                 <p className="text-xl text-gray-700 leading-relaxed mb-6">

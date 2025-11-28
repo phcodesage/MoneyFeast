@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/Home';
 import PostDetail from './pages/PostDetail';
+import CategoryPage from './pages/CategoryPage';
 import Search from './pages/Search';
 import NotFound from './pages/NotFound';
 import Login from './pages/admin/Login';
@@ -12,6 +13,7 @@ import Signup from './pages/admin/Signup';
 import Dashboard from './pages/admin/Dashboard';
 import PostEditor from './pages/admin/PostEditor';
 import { usePageTracking } from './hooks/usePageTracking';
+import ScrollToTop from './components/ScrollToTop';
 
 function AppContent() {
   usePageTracking();
@@ -40,6 +42,13 @@ function AppContent() {
           <Footer />
         </div>
       } />
+      <Route path="/category/:slug" element={
+        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-green-50">
+          <Header />
+          <CategoryPage />
+          <Footer />
+        </div>
+      } />
 
       {/* Admin Routes */}
       <Route path="/admin/login" element={<Login />} />
@@ -56,6 +65,7 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <ErrorBoundary>
         <AuthProvider>
           <AppContent />
