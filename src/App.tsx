@@ -8,6 +8,7 @@ import PostDetail from './pages/PostDetail';
 import Search from './pages/Search';
 import NotFound from './pages/NotFound';
 import Login from './pages/admin/Login';
+import Signup from './pages/admin/Signup';
 import Dashboard from './pages/admin/Dashboard';
 import PostEditor from './pages/admin/PostEditor';
 import { usePageTracking } from './hooks/usePageTracking';
@@ -42,6 +43,7 @@ function AppContent() {
 
       {/* Admin Routes */}
       <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/signup" element={<Signup />} />
       <Route path="/admin/dashboard" element={<Dashboard />} />
       <Route path="/admin/posts/:id" element={<PostEditor />} />
 

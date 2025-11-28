@@ -77,8 +77,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-600"></div>
       </div>
     );
   }
@@ -86,25 +86,30 @@ export default function Dashboard() {
   return (
     <>
       <SEO title="Admin Dashboard" />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600 mt-1">Manage your blog content</p>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-display font-bold text-slate-900">Admin Dashboard</h1>
+                  <p className="text-xs text-slate-500">Welcome back, {user?.email}</p>
+                </div>
               </div>
               <div className="flex items-center gap-4">
                 <Link
                   to="/"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-slate-600 hover:text-emerald-600 transition-colors font-medium text-sm"
                 >
                   View Site
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
@@ -118,44 +123,51 @@ export default function Dashboard() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Posts</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">{posts.length}</p>
+                  <p className="text-sm font-medium text-slate-500">Total Posts</p>
+                  <p className="text-3xl font-display font-bold text-slate-900 mt-1">{posts.length}</p>
                 </div>
-                <FileText className="h-12 w-12 text-green-600 opacity-20" />
+                <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-emerald-600" />
+                </div>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Published</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-sm font-medium text-slate-500">Published</p>
+                  <p className="text-3xl font-display font-bold text-slate-900 mt-1">
                     {posts.filter(p => p.published).length}
                   </p>
                 </div>
-                <Eye className="h-12 w-12 text-blue-600 opacity-20" />
+                <div className="h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center">
+                  <Eye className="h-6 w-6 text-blue-600" />
+                </div>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Drafts</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-sm font-medium text-slate-500">Drafts</p>
+                  <p className="text-3xl font-display font-bold text-slate-900 mt-1">
                     {posts.filter(p => !p.published).length}
                   </p>
                 </div>
-                <EyeOff className="h-12 w-12 text-gray-600 opacity-20" />
+                <div className="h-12 w-12 bg-slate-50 rounded-full flex items-center justify-center">
+                  <EyeOff className="h-6 w-6 text-slate-600" />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-slate-900">All Posts</h2>
             <Link
               to="/admin/posts/new"
-              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+              className="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all shadow-sm hover:shadow-emerald-500/30"
             >
               <Plus className="h-5 w-5 mr-2" />
               Create New Post
@@ -163,80 +175,81 @@ export default function Dashboard() {
           </div>
 
           {/* Posts Table */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Title
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Category
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-100">
                   {posts.map((post) => (
-                    <tr key={post.id} className="hover:bg-gray-50">
+                    <tr key={post.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{post.title}</div>
-                            <div className="text-sm text-gray-500">{post.author}</div>
+                            <div className="text-sm font-medium text-slate-900">{post.title}</div>
+                            <div className="text-xs text-slate-500 mt-0.5">{post.author}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                        <span className="px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
                           {post.category?.name}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => togglePublished(post)}
-                          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
-                            post.published
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
+                          className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${post.published
+                              ? 'bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100'
+                              : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200'
+                            }`}
                         >
                           {post.published ? (
                             <>
-                              <Eye className="h-3 w-3 mr-1" />
+                              <Eye className="h-3 w-3 mr-1.5" />
                               Published
                             </>
                           ) : (
                             <>
-                              <EyeOff className="h-3 w-3 mr-1" />
+                              <EyeOff className="h-3 w-3 mr-1.5" />
                               Draft
                             </>
                           )}
                         </button>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         {new Date(post.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-3">
                           <Link
                             to={`/admin/posts/${post.id}`}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-slate-400 hover:text-emerald-600 transition-colors"
+                            title="Edit"
                           >
                             <Edit className="h-4 w-4" />
                           </Link>
                           <button
                             onClick={() => deletePost(post.id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-slate-400 hover:text-red-600 transition-colors"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -250,13 +263,15 @@ export default function Dashboard() {
           </div>
 
           {posts.length === 0 && (
-            <div className="text-center py-12">
-              <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No posts yet</h3>
-              <p className="text-gray-600 mb-6">Get started by creating your first blog post</p>
+            <div className="text-center py-16 bg-white rounded-xl border border-slate-200 mt-6">
+              <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="h-8 w-8 text-slate-300" />
+              </div>
+              <h3 className="text-lg font-medium text-slate-900 mb-2">No posts yet</h3>
+              <p className="text-slate-500 mb-6 max-w-sm mx-auto">Get started by creating your first blog post. It will appear here once created.</p>
               <Link
                 to="/admin/posts/new"
-                className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Create New Post

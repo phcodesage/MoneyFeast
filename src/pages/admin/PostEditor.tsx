@@ -140,8 +140,8 @@ export default function PostEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-600"></div>
       </div>
     );
   }
@@ -149,20 +149,20 @@ export default function PostEditor() {
   return (
     <>
       <SEO title={isNew ? 'Create New Post' : 'Edit Post'} />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => navigate('/admin/dashboard')}
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-slate-500 hover:text-slate-900 transition-colors p-2 hover:bg-slate-100 rounded-lg"
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </button>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-xl font-display font-bold text-slate-900">
                     {isNew ? 'Create New Post' : 'Edit Post'}
                   </h1>
                 </div>
@@ -170,7 +170,7 @@ export default function PostEditor() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="inline-flex items-center px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50"
+                className="inline-flex items-center px-6 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-all shadow-sm hover:shadow-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {saving ? 'Saving...' : 'Save Post'}
@@ -184,52 +184,52 @@ export default function PostEditor() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Editor */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Title *
                     </label>
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => handleTitleChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-display font-bold text-lg"
                       placeholder="Enter post title..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Slug *
                     </label>
                     <input
                       type="text"
                       value={slug}
                       onChange={(e) => setSlug(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-slate-50 text-slate-600 font-mono text-sm"
                       placeholder="post-url-slug"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                      URL: /post/{slug || 'your-slug'}
+                    <p className="text-xs text-slate-500 mt-1.5 flex items-center">
+                      <span className="font-medium mr-1">URL:</span> /post/{slug || 'your-slug'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Excerpt
                     </label>
                     <textarea
                       value={excerpt}
                       onChange={(e) => setExcerpt(e.target.value)}
                       rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                       placeholder="Brief description of the post..."
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="prose-editor">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Content (Markdown)
                     </label>
                     <SimpleMDE
@@ -263,30 +263,30 @@ export default function PostEditor() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Post Settings</h3>
-                <div className="space-y-4">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-24">
+                <h3 className="text-lg font-display font-bold text-slate-900 mb-6 pb-4 border-b border-slate-100">Post Settings</h3>
+                <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Author
                     </label>
                     <input
                       type="text"
                       value={author}
                       onChange={(e) => setAuthor(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                       placeholder="Author name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Category *
                     </label>
                     <select
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-white"
                     >
                       {categories.map((cat) => (
                         <option key={cat.id} value={cat.id}>
@@ -297,7 +297,7 @@ export default function PostEditor() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Read Time (minutes)
                     </label>
                     <input
@@ -305,33 +305,29 @@ export default function PostEditor() {
                       value={readTime}
                       onChange={(e) => setReadTime(parseInt(e.target.value) || 5)}
                       min="1"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                     />
                   </div>
 
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="featured"
-                      checked={featured}
-                      onChange={(e) => setFeatured(e.target.checked)}
-                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="featured" className="ml-2 block text-sm text-gray-700">
-                      Featured Post
+                  <div className="pt-4 border-t border-slate-100 space-y-4">
+                    <label className="flex items-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={featured}
+                        onChange={(e) => setFeatured(e.target.checked)}
+                        className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                      />
+                      <span className="ml-3 text-sm font-medium text-slate-700">Featured Post</span>
                     </label>
-                  </div>
 
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="published"
-                      checked={published}
-                      onChange={(e) => setPublished(e.target.checked)}
-                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
-                      Publish immediately
+                    <label className="flex items-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={published}
+                        onChange={(e) => setPublished(e.target.checked)}
+                        className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                      />
+                      <span className="ml-3 text-sm font-medium text-slate-700">Publish immediately</span>
                     </label>
                   </div>
                 </div>
